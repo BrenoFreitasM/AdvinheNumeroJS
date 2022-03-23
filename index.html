@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo do advinhe o número</title>
+  <style>
+    html {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      width: 50%;
+      max-width: 800px;
+      min-width: 480px;
+      margin: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    h1 {
+      background-color: blue;
+      color: white;
+      border-radius: 20px 0px 0px 0px;
+      padding: 5px;
+      margin: auto;
+      height: 35px;
+      width: 426px;
+    }
+
+    
+
+    p#pprincipal {
+      background-color: antiquewhite;
+      padding: 5px;
+      margin: auto;
+      height: 52px;
+      width: 426px;
+      
+    }
+
+    div {
+      background-color: antiquewhite;
+      padding: 5px;
+      padding-bottom: 15px;
+      margin: auto;
+      width: 426px;
+    }
+
+    .lastResult {
+      color: white;
+      padding: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Jogo de advinhe o Número</h1>
+  
+  <p id="pprincipal">Nós selecionamos um número aleatório entre 1 e 100. Veja se consegue adivinhar em 10 chances ou menos. Nós lhe diremos se seu palpite foi muito alto ou muito baixo.</p>
+
+  <div class="form">
+    <label for="campoPalpite">Digite seu palpite: </label><input type="text" id="campoPalpite" class="campoPalpite">
+    <input type="submit" value="Enviar palpite" class="envioPalpite">
+  </div>
+
+  <div class="resultadoParas">
+    <p class="palpites"></p>
+    <p class="ultimoResultado"></p>
+    <p class="baixoOuAlto"></p>
+  </div>
+  
+</body>
+
+<script>
+  // Seu Java Script Aqui
+  var numeroAleatorio= Math.floor(Math.random() * 100) + 1;
+
+  var palpites = document.querySelector('.palpites');
+  var ultimoResultado = document.querySelector('.ultimoResultado');
+  var baixoOuAlto = document.querySelector('.baixoOuAlto');
+
+  var envioPalpite = document.querySelector('.envioPalpite');
+  var campoPalpite = document.querySelector('.campoPalpite');
+
+  var contagemPalpites = 1;
+  var botaoReinicio;
+  campoPalpite.focus();
+
+  function conferirPalpite() {
+    var palpiteUsuario = Number(campoPalpite.value);
+    if (contagemPalpites === 1 ) {
+      palpites.textContent = 'Palpites Anteriores: '
+    }
+    palpites.textContent += palpiteUsuario + ' ';
+
+    if ( palpiteUsuario === numeroAleatorio ) {
+      ultimoResultado.textContent = 'Parabéns! você acertou!';
+      ultimoResultado.style.backgroundColor = 'green';
+      ultimoResultado.style.color = 'white';
+      baixoOuAlto.textContent = ' ';
+    }
+
+    else if ( contagemPalpites === 10 ) {
+      ultimoResultado.textContent = '!!!FIM DO JOGO!!!';
+      baixoOuAlto.textContent = '';
+      configFimDeJogo();
+    }
+
+    else {
+      ultimoResultado.textContent = 'Errado!';
+      ultimoResultado.style.backgroundColor = 'red';
+      if (palpiteUsuario < numeroAleatorio ) {
+        baixoOuAlto.textContent = 'seu número está acima!';
+      }
+      else if (palpiteUsuario > numeroAleatorio ) {
+        baixoOuAlto.textContent = 'seu número está abaixo!';
+      }
+    }
+
+    contagemPalpites++;
+    campoPalpite.value = '';
+    campoPalpite.focus();
+  }
+  
+  envioPalpite.addEventListener('click', conferirPalpite);
+
+  function configFimDeJogo() {
+    campoPalpite.disabled = true;
+    envioPalpite.disabled = true;
+    botaoReinicio = document.createElement('button');
+    botaoReinicio.textContent = 'Iniciar novo jogo!';
+    document.body.appendChild(botaoReinicio);
+    botaoReinicio.addEventListener('click', reiniciarJogo)
+  }
+
+  function reiniciarJogo() {
+    contagemPalpites = 1;
+    
+    var reiniciarParas = document.querySelectorAll('.resultadoParas p');
+    
+    for ( var i = 0 ; i < reiniciarParas.length ; i++) {
+      reiniciarParas[i].textContent = '';
+    }
+
+    botaoReinicio.parentNode.removeChild(botaoReinicio);
+
+    campoPalpite.disabled = false;
+    envioPalpite.disabled = false;
+    campoPalpite.value = '';
+    campoPalpite.focus();
+
+    ultimoResultado.style.backgroundColor= 'white';
+
+    numeroAleatorio = Math.floor(Math.random() * 100) + 1;
+  }
+
+  
+
+</script>
+</html>
